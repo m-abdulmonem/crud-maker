@@ -1,22 +1,22 @@
 {
-    "name": "mabdulmonem/crud-maker",
-    "description": "A Laravel package for generating CRUD operations.",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Mohamed Adbulmonem",
-            "email": "mabdulalmonem@gmail.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Mabdulmonem\\CrudMaker": "src/"
-        }
-    },
-    "minimum-stability": "dev",
-    "require": {
-        "php": "^8.0",
-        "laravel/framework": "^10.0"
+  "name": "mabdulmonem/crud-maker",
+  "description": "A Laravel package for generating CRUD operations.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mohamed Adbulmonem",
+      "email": "mabdulalmonem@gmail.com"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Mabdulmonem\\CrudMaker\\": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^8.0",
+    "laravel/framework": "^10.0"
+  }
 }
