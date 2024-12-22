@@ -1,6 +1,6 @@
 <?php
 
-namespace Mabdulmonem\CrudMaker;
+namespace MAbdulMonem\CrudMaker;
 
 use Illuminate\Support\ServiceProvider;
 
