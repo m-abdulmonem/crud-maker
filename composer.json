@@ -11,7 +11,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "Mabdulmonem\\CrudMaker\\": "src/"
+      "Mabdulmonem\\CrudMaker\\": "src"
     }
   },
   "require": {
