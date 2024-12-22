@@ -11,14 +11,14 @@
   ],
   "autoload": {
     "psr-4": {
-      "Mabdulmonem\\CrudMaker\\": "src/"
+      "MAbdulMonem\\CrudMaker\\": "src/"
     }
   },
   "require": {
     "php": "^8.0",
     "illuminate/support": ">=8.0"
   },
-    "minimum-stability": "stable",
-    "prefer-stable": true,
-    "version": "1.0.1"
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "version": "1.0.1"
 }
