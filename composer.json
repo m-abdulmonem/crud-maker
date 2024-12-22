@@ -18,6 +18,7 @@
     "php": "^8.0",
     "illuminate/support": ">=8.0"
   },
-  "minimum-stability": "stable",
-  "prefer-stable": true
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "version": "1.0.0"
 }
