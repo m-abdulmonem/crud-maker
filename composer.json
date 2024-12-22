@@ -5,7 +5,7 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Mohamed Adbulmonem",
+      "name": "Mohamed Abdulmonem",
       "email": "mabdulalmonem@gmail.com"
     }
   ],
@@ -16,7 +16,7 @@
   },
   "require": {
     "php": "^8.0",
-    "laravel/framework": "^11.0"
+    "illuminate/support": ">=8.0"
   },
   "minimum-stability": "stable",
   "prefer-stable": true
