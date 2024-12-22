@@ -14,7 +14,7 @@
       "Mabdulmonem\\CrudMaker\\": "src/"
     }
   },
-"minimum-stability": "0.0.1",
+"minimum-stability": "alpha",
 "prefer-stable": true,
   "require": {
     "php": "^8.0",
