@@ -12,11 +12,11 @@ class CrudMakerServiceProvider extends ServiceProvider
     public function register()
     {
         // Register commands
-        if ($this->app->runningInConsole()) {
+        // if (!$this->app->runningInConsole()) {
             $this->commands([
                 Commands\MakeCrudCommand::class,
             ]);
-        }
+        // }
 
         // Merge configuration
         $this->mergeConfigFrom(__DIR__ . '/../config/crud-maker.php', 'crud-maker');
