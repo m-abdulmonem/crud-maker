@@ -15,8 +15,7 @@
     }
   },
 "minimum-stability": "0.0.1",
-"prefer-stable": true
-
+"prefer-stable": true,
   "require": {
     "php": "^8.0",
     "laravel/framework": "^10.0"
