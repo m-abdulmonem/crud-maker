@@ -14,10 +14,10 @@
       "Mabdulmonem\\CrudMaker\\": "src/"
     }
   },
-"minimum-stability": "dev",
-"prefer-stable": true,
   "require": {
     "php": "^8.0",
     "laravel/framework": "^10.0"
-  }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }
