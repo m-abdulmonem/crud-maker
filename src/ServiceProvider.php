@@ -1,6 +1,6 @@
 <?php
 
-namespace MAbdulMonem\CrudMaker;
+namespace Mabdulmonem\CrudMaker;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -11,12 +11,7 @@ class CrudMakerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register commands
-        // if (!$this->app->runningInConsole()) {
-            $this->commands([
-                Commands\MakeCrudCommand::class,
-            ]);
-        // }
+ 
 
         // Merge configuration
         $this->mergeConfigFrom(__DIR__ . '/../config/crud-maker.php', 'crud-maker');
@@ -27,6 +22,12 @@ class CrudMakerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Register commands
+        if (!$this->app->runningInConsole()) {
+            $this->commands([
+                Commands\MakeCrudCommand::class,
+            ]);
+        }
         // Publish config
         $this->publishes([
             __DIR__ . '/../config/crud-maker.php' => config_path('crud-maker.php'),
