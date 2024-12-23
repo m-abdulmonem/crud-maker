@@ -24,7 +24,7 @@ class CrudMakerServiceProvider extends ServiceProvider
     public function boot()
     {
         // Register commands
-        if (!$this->app->runningInConsole()) {
+        if ($this->app->runningInConsole()) {
             $this->commands([
                 CrudMaker::class,
             ]);
