@@ -69,7 +69,7 @@ class ModelGenerations
         $command->info("Model file created: $path,");
     }
 
-    private function getCastsAttrs($command, $columns)
+    private static function getCastsAttrs($command, $columns)
     {
         $attrs = [];
         foreach ($columns as $col) {

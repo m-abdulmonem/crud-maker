@@ -40,7 +40,7 @@ class ResourceGeneration
         $command->info("Resource file created: $path,");
     }
 
-    private function getResourceAttrs($command, $columns): ?string
+    private static function getResourceAttrs($command, $columns): ?string
     {
         if ($command->hasOption('translated')) {
             return null;
@@ -54,14 +54,14 @@ class ResourceGeneration
 
         $data = <<<EOT
         return [
-            {$this->indentCode($attrs)}
+            {$command->indentCode($attrs)}
         ];
 EOT;
 
         return $data;
     }
 
-    private function getResourceTranslationsAttrs($command, $columns, $translatedColumns)
+    private static function getResourceTranslationsAttrs($command, $columns, $translatedColumns)
     {
         if (!$command->hasOption('translated')) {
             return null;

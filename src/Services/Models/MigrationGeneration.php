@@ -3,6 +3,7 @@
 namespace  Mabdulmonem\CrudMaker\Services\Models;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 
 class MigrationGeneration
@@ -10,7 +11,7 @@ class MigrationGeneration
 
     public static function build(Command $command, string $lowerPluralized, string $lowerName, array $columns, ?array $translatedColumns)
     {
-        $timestamp = now()->format('Y_m_d_His');
+        $timestamp = Carbon::now()->format('Y_m_d_His');
         $migrationName = $timestamp . '_create_' . $lowerPluralized . '_table.php';
         $migrationPath = database_path('migrations/' . $migrationName);
         $files = File::allFiles(database_path('migrations'));

@@ -3,6 +3,7 @@
 namespace Mabdulmonem\CrudMaker;
 
 use Illuminate\Support\ServiceProvider;
+use  Mabdulmonem\CrudMaker\Commands\CrudMaker;
 
 class CrudMakerServiceProvider extends ServiceProvider
 {
@@ -25,7 +26,7 @@ class CrudMakerServiceProvider extends ServiceProvider
         // Register commands
         if (!$this->app->runningInConsole()) {
             $this->commands([
-                Commands\MakeCrudCommand::class,
+                CrudMaker::class,
             ]);
         }
         // Publish config

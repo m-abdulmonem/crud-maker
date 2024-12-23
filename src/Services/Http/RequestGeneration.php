@@ -100,7 +100,7 @@ class RequestGeneration
         ];
     }
 
-    private function getTableNameFromForeignId(string $columnName): string
+    private static function getTableNameFromForeignId(string $columnName): string
     {
         // Remove the `_id` suffix from the column name
         $baseName = str_replace('_id', '', $columnName);
@@ -109,7 +109,7 @@ class RequestGeneration
         return Str::plural($baseName);
     }
 
-    private function getTranslationsColumns($translated): array
+    private static function getTranslationsColumns($translated): array
     {
         $rules = [];
         $attrs = [];
@@ -123,7 +123,7 @@ class RequestGeneration
         ];
     }
 
-    private static function rulesNotTranslations($command, $columns): array
+    private  static function rulesNotTranslations($command, $columns): array
     {
         $attrs = self::getColumns($columns);
         $finalRules = <<<EOT
