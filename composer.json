@@ -1,5 +1,5 @@
 {
-  "name": "mabdulmonem/crud-maker-dev",
+  "name": "mabdulmonem/crud-maker",
   "description": "A Laravel package for generating CRUD operations.",
   "type": "library",
   "license": "MIT",
