@@ -2,9 +2,11 @@
 
 namespace  Mabdulmonem\CrudMaker\Services\Models;
 
-use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Mabdulmonem\CrudMaker\Helpers\Helper;
+use Mabdulmonem\CrudMaker\Services\Http\EnumGeneration;
 
 class MigrationGeneration
 {
@@ -27,12 +29,12 @@ class MigrationGeneration
             return false;
         }
 
-        if (!File::exists($stubPath = base_path('stubs/migrations.stub'))) {
-            $command->error("Stub file not found at: $stubPath");
-            return Command::FAILURE;
-        }
+        // if (!File::exists($stubPath = base_path('stubs/migrations.stub'))) {
+        //     $command->error("Stub file not found at: $stubPath");
+        //     return Command::FAILURE;
+        // }
 
-        $stubContent = File::get($stubPath);
+        // $stubContent = File::get($stubPath);
         $stubContent = str_replace(
             [
                 '{{LOWER_PLURALIZED_CRUD_NAME}}',
@@ -46,7 +48,8 @@ class MigrationGeneration
                 self::generateTranslatedTable($command, $lowerPluralized, $lowerName, $translatedColumns),
                 self::generateDropTranslateTable($command, $lowerPluralized)
             ],
-            $stubContent
+            Helper::getStub('migrations')
+
         );
 
         // Save the migration file
@@ -63,7 +66,13 @@ class MigrationGeneration
         foreach ($columns as $col) {
             if ($col['type'] == 'foreignId') {
                 $lines[] = "\$table->foreignId('{$col['name']}')->nullable()->constrained()->cascadeOnDelete();";
-            } else {
+            }
+            elseif($col['type'] =='enum'){
+                $enum = EnumGeneration::getName($col['name']);
+                $enum = "\App\Enums\\{$enum}Enum";
+                $lines[] = "\$table->enum('{$col[name]}', array_column(\$enum::cases(),'value'))->nullable();";
+            }
+             else {
                 $lines[] = "\$table->{$col['type']}('{$col['name']}');";
             }
         }

@@ -1,0 +1,133 @@
+<?php
+
+namespace App\Http\Controllers\Api\{{CRUD_PATH}};
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\{{CRUD_PATH}}\{{CRUD_NAME}}Request;
+use App\Http\Requests\Api\General\ListRequest;
+use App\Http\Resources\Api\{{CRUD_PATH}}\{{CRUD_NAME}}Resource;
+use App\Models\{{CRUD_NAME}};
+use App\Services\General\GeneralCrudService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+class {{PLURALIZED_CRUD_NAME}}Controller extends Controller implements HasMiddleware
+{
+    private GeneralCrudService $service;
+    private array $search =  [
+       {{CRUD_COLUMNS}}
+    ];
+
+    public function __construct()
+    {
+        $this->service = new GeneralCrudService(
+            __('{{CRUD_NAME}}'),
+            {{CRUD_NAME}}Resource::class,
+            {{CRUD_NAME}}::class,
+        );
+    }
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return AnonymousResourceCollection
+     */
+    public function index(ListRequest $request)
+    {
+        $data = $this->service->list(
+            $request,
+            search: $this->search,
+            closure: function ($q){
+                //todo : add more statements to sql
+            }
+        );
+
+        return  {{CRUD_NAME}}Resource::collection($data)->additional([
+            'message' => '',
+            'status' => 'success'
+        ]);
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param {{CRUD_NAME}}Request $request
+     * @return JsonResponse
+     */
+    public function store({{CRUD_NAME}}Request $request)
+    {
+        return $this->service->save(
+            $request,
+            closure: function({{CRUD_NAME}} ${{LOWER_CRUD_NAME}}){
+                //todo : this add statement on model after saving
+            }
+        );
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param {{CRUD_NAME}} ${{LOWER_CRUD_NAME}}
+     * @return JsonResponse
+     */
+    public function show({{CRUD_NAME}} ${{LOWER_CRUD_NAME}})
+    {
+        return $this->service->show(${{LOWER_CRUD_NAME}});
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param {{CRUD_NAME}}Request $request
+     * @param {{CRUD_NAME}} ${{LOWER_CRUD_NAME}}
+     * @return JsonResponse
+     */
+    public function update({{CRUD_NAME}}Request $request, {{CRUD_NAME}} ${{LOWER_CRUD_NAME}})
+    {
+        return $this->service->save(
+            $request,
+            ${{LOWER_CRUD_NAME}},
+            function ({{CRUD_NAME}} ${{LOWER_CRUD_NAME}}){
+                 //todo : this add statement on model after saving
+            }
+        );
+    }
+
+   /**
+     * Update the specified resource status.
+     *
+     * @param {{CRUD_NAME}} ${{LOWER_CRUD_NAME}}
+     * @return JsonResponse
+     */
+    public function updateStatus({{CRUD_NAME}} ${{LOWER_CRUD_NAME}})
+    {
+        return $this->service->updateStatus(${{LOWER_CRUD_NAME}});
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param {{CRUD_NAME}} ${{LOWER_CRUD_NAME}}
+     * @return JsonResponse
+     */
+    public function destroy({{CRUD_NAME}} ${{LOWER_CRUD_NAME}})
+    {
+        return $this->service->destroy(${{LOWER_CRUD_NAME}});
+    }
+
+    public static function middleware()
+    {
+        return [
+            new Middleware(middleware: 'permission:index_{{LOWER_CRUD_NAME}}', only: ['index'] ),
+            new Middleware(middleware: 'permission:show_{{LOWER_CRUD_NAME}}', only: ['show'] ),
+            new Middleware(middleware: 'permission:create_{{LOWER_CRUD_NAME}}', only: ['store'] ),
+            new Middleware(middleware: 'permission:update_{{LOWER_CRUD_NAME}}', only: ['update'] ),
+            new Middleware(middleware: 'permission:status-update_{{LOWER_CRUD_NAME}}', only: ['updateStatus'] ),
+            new Middleware(middleware: 'permission:delete_{{LOWER_CRUD_NAME}}', only: ['destroy'] ),
+        ];
+    }
+}

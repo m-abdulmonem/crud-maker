@@ -3,7 +3,7 @@
 namespace Mabdulmonem\CrudMaker;
 
 use Illuminate\Support\ServiceProvider;
-use  Mabdulmonem\CrudMaker\Commands\CrudMaker;
+use Mabdulmonem\CrudMaker\Commands\CrudMaker;
 
 class CrudMakerServiceProvider extends ServiceProvider
 {
@@ -12,7 +12,7 @@ class CrudMakerServiceProvider extends ServiceProvider
      */
     public function register()
     {
- 
+
 
         // Merge configuration
         $this->mergeConfigFrom(__DIR__ . '/../config/crud-maker.php', 'crud-maker');
@@ -34,7 +34,8 @@ class CrudMakerServiceProvider extends ServiceProvider
             __DIR__ . '/../config/crud-maker.php' => config_path('crud-maker.php'),
         ], 'config');
 
-        // Load views
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'crud-maker');
+        $this->publishes( [
+            __DIR__ . '/../Stubs' => base_path('stubs/vendor/mabdulmonem/crud-maker'), // Destination path
+        ], 'stubs');
     }
 }

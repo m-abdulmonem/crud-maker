@@ -4,16 +4,17 @@ namespace  Mabdulmonem\CrudMaker\Services\Http;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Mabdulmonem\CrudMaker\Helpers\Helper;
 
 class ControllerGeneration
 {
 
     public static function build(Command $command, string $pluralized, string $lowerName, string $name, string $namespace, array $columns)
     {
-        if (!File::exists($stubPath = base_path('stubs/controller.stub'))) {
-            $command->error("Stub file not found at: $stubPath");
-            return Command::FAILURE;
-        }
+        // if (!File::exists($stubPath = base_path('stubs/controller.stub'))) {
+            // $command->error("Stub file not found at: $stubPath");
+            // return Command::FAILURE;
+        // }
 
         if (!File::isDirectory($path = base_path("app/Http/Controllers/Api/{$namespace}"))) {
 
@@ -42,7 +43,8 @@ class ControllerGeneration
                     $lowerName,
                     self::getSearchColumns($command,$columns)
                 ],
-                File::get($stubPath)
+                Helper::getStub('controller')
+                //File::get($stubPath)
             )
         );
 

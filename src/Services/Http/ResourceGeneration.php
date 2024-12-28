@@ -4,6 +4,7 @@ namespace  Mabdulmonem\CrudMaker\Services\Http;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Mabdulmonem\CrudMaker\Helpers\Helper;
 
 class ResourceGeneration
 {
@@ -33,7 +34,9 @@ class ResourceGeneration
                     self::getResourceAttrs($command, $columns),
                     self::getResourceTranslationsAttrs($command, $columns, $translatedColumns),
                 ],
-                File::get(base_path('stubs/resource.stub'))
+                                Helper::getStub('resource')
+
+                // File::get(base_path('stubs/resource.stub'))
             )
         );
 

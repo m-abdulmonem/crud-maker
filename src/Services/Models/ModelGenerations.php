@@ -1,7 +1,10 @@
 <?php
 namespace  Mabdulmonem\CrudMaker\Services\Models;
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Mabdulmonem\CrudMaker\Helpers\Helper;
+use Mabdulmonem\CrudMaker\Services\Http\EnumGeneration;
 
 class ModelGenerations
 {
@@ -29,7 +32,9 @@ class ModelGenerations
                         $name,
                         $lowerName,
                     ],
-                    File::get(base_path('stubs/translations_model.stub'))
+                                Helper::getStub('translations_model')
+
+                    // File::get(base_path('stubs/translations_model.stub'))
                 )
             );
 
@@ -58,11 +63,13 @@ class ModelGenerations
                     $command->hasOption('translated') ? 'implements TranslatableContract' : null,
                     $command->hasOption('translated') ? 'use Translatable;' : null,
                     $command->hasOption('translated') ? 'use Astrotomic\Translatable\Translatable;' : null,
-                    self::getRelations(),
+                    self::getRelations($columns),
                     $translatedColumns ? "public array \$translatedAttributes = ['" . implode("','", array_column($translatedColumns, 'name')) . "'];" : null,
                     self::getCastsAttrs($command,$columns)
                 ],
-                File::get(base_path('stubs/model.stub'))
+                Helper::getStub('model')
+
+                // File::get(base_path('stubs/model.stub'))
             )
         );
 
@@ -76,17 +83,48 @@ class ModelGenerations
             if ($col['is_media'] || $col['is_list_media']) {
                 $attrs[] = "'{$col['name']}' =>  \App\Casts\MediaColumn::class,";
             }
-            if ($col['is_array']) {
+            elseif ($col['is_array']) {
                 $attrs[] = "'{$col['name']}' => 'array',";
+            }
+            elseif (@$col['is_enum']) {
+              $attrs[] = "'{$col['name']}' => \App\Enums\\".EnumGeneration::getName($col['name'])."Enum,";
             }
         }
         return $command->indentCode($attrs, true);
     }
 
-    private static function getRelations()
+    private static function getRelations(array $columns)
     {
-        return null;
+        $columns = array_filter(
+            $columns,
+            fn ($column) => $column['type'] == 'foreignId'
+        );
+        $relations = [];
+        foreach ($columns as $column){
+            $name = lcfirst(self::getRelationName(str_replace('_id', '', $column['name'])));
+            $class = self::getRelationName(str_replace('_id', '', $column['name']));
+$relations[] = <<<EOT
+
+            public function {$name}(){
+                \$this->belongsTo({$class}::class)
+            }
+
+    EOT;
+        }
+        return implode(' \n', $relations);
     }
 
+
+    public static function getRelationName(string $name){
+           // Standardize the name format
+           $name = Str::of($name)
+           ->trim() // Remove leading/trailing spaces
+           ->replace(['-', '_'], ' ') // Replace dashes and underscores with spaces
+           ->lower() // Convert to lowercase
+           ->replace(' ', '_') // Replace spaces with underscores
+           ->__toString(); // Convert to string
+
+           return Str::studly($name);
+    }
 
 }

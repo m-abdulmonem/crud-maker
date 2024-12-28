@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Requests\Api\{{CRUD_PATH}};
+
+use App\Http\Requests\Api\ApiMasterRequest;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class {{CRUD_NAME}}Request extends ApiMasterRequest
+{
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
+    public function rules(): array
+    {
+        $status  = $this->{{CRUD_LOWER_NAME}} ? 'sometimes' : 'required';
+
+        {{RULES}}
+    }
+
+    public function attributes(): array
+    {
+        {{ATTRS}}
+    }
+}

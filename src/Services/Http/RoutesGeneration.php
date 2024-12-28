@@ -13,13 +13,18 @@ class RoutesGeneration
         if ($command->argument('route') == null) {
             return false;
         }
+           $content = self::existingContent($command);
+        if (! file_exists($content['path'])){
+            $command->error("{$content['path']}  file not found");
+            return false;
+        }
 
-        self::saveAtRoute($command, $lowerPluralized, $lowerName, $controller);
+        self::saveAtRoute($command, $lowerPluralized, $lowerName, $controller, $content);
     }
 
-    private static function saveAtRoute($command, $lowerPluralized, $lowerName, $controller): void
+    private static function saveAtRoute($command, $lowerPluralized, $lowerName, $controller, $content): void
     {
-        $content = self::existingContent($command);
+//       $content = self::existingContent($command);
 
         $position = strpos(
             $content['content'],

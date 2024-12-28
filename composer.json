@@ -1,5 +1,5 @@
 {
-  "name": "mabdulmonem/crud-maker",
+  "name": "mabdulmonem/crud-maker-dev",
   "description": "A Laravel package for generating CRUD operations.",
   "type": "library",
   "license": "MIT",
@@ -16,6 +16,7 @@
   },
   "require": {
     "php": "^8.0",
+    "doctrine/dbal": "^4.2",
     "illuminate/support": ">=8.0"
   },
   "config": {
@@ -30,5 +31,5 @@
   },
   "minimum-stability": "stable",
   "prefer-stable": true,
-  "version": "1.4.0"
+  "version": "1.0.0"
 }

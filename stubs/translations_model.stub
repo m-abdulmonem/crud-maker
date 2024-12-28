@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class {{CRUD_NAME}}Translation extends Model
+{
+    protected $guarded = ['id'];
+
+    public function {{LOWER_CRUD_NAME}}()
+    {
+        return $this->belongsTo({{CRUD_NAME}}::class);
+    }
+}

@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Enums;
+
+enum {{CRUD_NAME}}Enum: {{ENUM_TYPE}}
+{
+    case Admin = 'admin';
+
+    {{CASES}}
+
+}

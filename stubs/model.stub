@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+{{TRANSLATED_TRAIT_NAMESPACE}}
+use Illuminate\Database\Eloquent\SoftDeletes;
+{{TRANSLATED_NAMESPACE}}
+
+class {{CRUD_NAME}} extends Model {{TRANSLATED_INTERFACE}}
+{
+    {{TRANSLATED_TRAIt}}
+    protected $guarded = ['id'];
+    {{TRANSLATED_ATTRIBUTES}}
+
+
+    protected function casts(): array
+    {
+        return [
+            {{MEDIA_COLUMNS}}
+        ];
+    }
+
+    {{RELATIONS}}
+}

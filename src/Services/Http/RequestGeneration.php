@@ -2,9 +2,10 @@
 
 namespace  Mabdulmonem\CrudMaker\Services\Http;
 
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
+use Mabdulmonem\CrudMaker\Helpers\Helper;
 
 class RequestGeneration
 {
@@ -64,7 +65,8 @@ class RequestGeneration
                     $finalAttrs,
                     $lowerName
                 ],
-                File::get(base_path('stubs/request.stub'))
+                Helper::getStub('request')
+                //File::get(base_path('stubs/request.stub'))
             )
         );
 
@@ -80,16 +82,18 @@ class RequestGeneration
             if ($column['type'] == 'uuid') {
                 continue;
             }
-            if ($column['type'] == 'foreignId') {
-                $rules[] = "'{$column['name']}' => '\$status|exists:" . self::getTableNameFromForeignId($column['name']) . ",id',";
+            elseif ($column['type'] == 'foreignId') {
+                $rules[] = "'{$column['name']}' => ".'"'."\$status|exists:" .
+                self::getTableNameFromForeignId($column['name']) . ",id".'"'.",";
             }
-            if ($column['is_media']) {
-                $rules[] = "'{$column['name']}' => '\$status|" . self::$rules[$column['media_type']] . "',";
+            elseif ($column['is_media']) {
+                $rules[] = "'{$column['name']}' => ".'"'."\$status|" . self::$rules[$column['media_type']] . "".'"'.",";
             }
-            if ($column['is_list_media']) {
-                $rules[] = "'{$column['name']}.*' => '\$status|" . self::$rules[$column['media_type']] . "',";
+            elseif ($column['is_list_media']) {
+                $rules[] = "'{$column['name']}.*' => ".'"'."\$status|" . self::$rules[$column['media_type']] .
+                "".'"'.",";
             } else {
-                $rules[] = "'{$column['name']}' => '\$status|" . self::$rules[$column['type']] . "',";
+                $rules[] = "'{$column['name']}' => ".'"'."\$status|" . self::$rules[$column['type']] . "".'"'.",";
             }
 
             $attrs[] = "'{$column['name']}' => __('" . ucfirst(str_replace('_', ' ', $column['name'])) . "'),";
@@ -127,13 +131,13 @@ class RequestGeneration
     {
         $attrs = self::getColumns($columns);
         $finalRules = <<<EOT
-       return [
+    return [
             {$command->indentCode($attrs['rules'])}
         ];
 EOT;
 
         $finalAttrs = <<<EOT
-       return [
+    return [
             {$command->indentCode($attrs['attrs'])}
         ];
 EOT;
