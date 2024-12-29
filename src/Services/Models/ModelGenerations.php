@@ -1,5 +1,7 @@
 <?php
-namespace  Mabdulmonem\CrudMaker\Services\Models;
+
+namespace Mabdulmonem\CrudMaker\Services\Models;
+
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -13,7 +15,7 @@ class ModelGenerations
     {
         self::buildTranslationModel($command, $name, $lowerName);
 
-        self::buildMainModel($command, $name,$columns,$translatedColumns);
+        self::buildMainModel($command, $name, $columns, $translatedColumns);
     }
 
     private static function buildTranslationModel($command, $name, $lowerName): void
@@ -32,9 +34,9 @@ class ModelGenerations
                         $name,
                         $lowerName,
                     ],
-                                Helper::getStub('translations_model')
+                    Helper::getStub('translations_model')
 
-                    // File::get(base_path('stubs/translations_model.stub'))
+                // File::get(base_path('stubs/translations_model.stub'))
                 )
             );
 
@@ -65,11 +67,11 @@ class ModelGenerations
                     $command->hasOption('translated') ? 'use Astrotomic\Translatable\Translatable;' : null,
                     self::getRelations($columns),
                     $translatedColumns ? "public array \$translatedAttributes = ['" . implode("','", array_column($translatedColumns, 'name')) . "'];" : null,
-                    self::getCastsAttrs($command,$columns)
+                    self::getCastsAttrs($command, $columns)
                 ],
                 Helper::getStub('model')
 
-                // File::get(base_path('stubs/model.stub'))
+            // File::get(base_path('stubs/model.stub'))
             )
         );
 
@@ -82,12 +84,12 @@ class ModelGenerations
         foreach ($columns as $col) {
             if ($col['is_media'] || $col['is_list_media']) {
                 $attrs[] = "'{$col['name']}' =>  \App\Casts\MediaColumn::class,";
-            }
-            elseif ($col['is_array']) {
+            } elseif ($col['type'] == 'boolean') {
+                $attrs[] = "'{$col['name']}' => 'boolean',";
+            } elseif ($col['is_array']) {
                 $attrs[] = "'{$col['name']}' => 'array',";
-            }
-            elseif (@$col['is_enum']) {
-              $attrs[] = "'{$col['name']}' => \App\Enums\\".EnumGeneration::getName($col['name'])."Enum,";
+            } elseif (@$col['is_enum']) {
+                $attrs[] = "'{$col['name']}' => \App\Enums\\" . EnumGeneration::getName($col['name']) . "Enum,";
             }
         }
         return $command->indentCode($attrs, true);
@@ -97,13 +99,13 @@ class ModelGenerations
     {
         $columns = array_filter(
             $columns,
-            fn ($column) => $column['type'] == 'foreignId'
+            fn($column) => $column['type'] == 'foreignId'
         );
         $relations = [];
-        foreach ($columns as $column){
+        foreach ($columns as $column) {
             $name = lcfirst(self::getRelationName(str_replace('_id', '', $column['name'])));
             $class = self::getRelationName(str_replace('_id', '', $column['name']));
-$relations[] = <<<EOT
+            $relations[] = <<<EOT
 
             public function {$name}(){
                 \$this->belongsTo({$class}::class)
@@ -115,16 +117,17 @@ $relations[] = <<<EOT
     }
 
 
-    public static function getRelationName(string $name){
-           // Standardize the name format
-           $name = Str::of($name)
-           ->trim() // Remove leading/trailing spaces
-           ->replace(['-', '_'], ' ') // Replace dashes and underscores with spaces
-           ->lower() // Convert to lowercase
-           ->replace(' ', '_') // Replace spaces with underscores
-           ->__toString(); // Convert to string
+    public static function getRelationName(string $name)
+    {
+        // Standardize the name format
+        $name = Str::of($name)
+            ->trim() // Remove leading/trailing spaces
+            ->replace(['-', '_'], ' ') // Replace dashes and underscores with spaces
+            ->lower() // Convert to lowercase
+            ->replace(' ', '_') // Replace spaces with underscores
+            ->__toString(); // Convert to string
 
-           return Str::studly($name);
+        return Str::studly($name);
     }
 
 }

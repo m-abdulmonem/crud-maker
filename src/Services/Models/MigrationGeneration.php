@@ -1,6 +1,6 @@
 <?php
 
-namespace  Mabdulmonem\CrudMaker\Services\Models;
+namespace Mabdulmonem\CrudMaker\Services\Models;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
@@ -11,7 +11,7 @@ use Mabdulmonem\CrudMaker\Services\Http\EnumGeneration;
 class MigrationGeneration
 {
 
-    public static function build(Command $command, string $lowerPluralized, string $lowerName, array $columns, ?array $translatedColumns)
+    public static function build(Command $command, string $lowerPluralized, string $lowerName, array $columns, ?array $translatedColumns, string $crudName)
     {
         $timestamp = Carbon::now()->format('Y_m_d_His');
         $migrationName = $timestamp . '_create_' . $lowerPluralized . '_table.php';
@@ -44,7 +44,7 @@ class MigrationGeneration
             ],
             [
                 $lowerPluralized,
-                self::generateColumnCode($columns),
+                self::generateColumnCode($columns, $crudName),
                 self::generateTranslatedTable($command, $lowerPluralized, $lowerName, $translatedColumns),
                 self::generateDropTranslateTable($command, $lowerPluralized)
             ],
@@ -53,27 +53,24 @@ class MigrationGeneration
         );
 
         // Save the migration file
-
-
         File::put($migrationPath, $stubContent);
 
         $command->info("Migration file created: $migrationPath");
     }
 
-    private static function generateColumnCode($columns): string
+    private static function generateColumnCode($columns, $crudName): string
     {
         $lines = [];
         foreach ($columns as $col) {
             if ($col['type'] == 'foreignId') {
                 $lines[] = "\$table->foreignId('{$col['name']}')->nullable()->constrained()->cascadeOnDelete();";
-            }
-            elseif($col['type'] =='enum'){
+            } elseif ($col['type'] == 'enum') {
                 $enum = EnumGeneration::getName($col['name']);
-                $enum = "\App\Enums\\{$enum}Enum";
-                $lines[] = "\$table->enum('{$col[name]}', array_column(\$enum::cases(),'value'))->nullable();";
-            }
-             else {
-                $lines[] = "\$table->{$col['type']}('{$col['name']}');";
+                $name = "$crudName{$enum}";
+                $enum = "\App\Enums\\{$name}Enum";
+                $lines[] = "\$table->enum('{$col['name']}', array_column($enum::cases(),'value'))->nullable();";
+            } else {
+                $lines[] = "\$table->{$col['type']}('{$col['name']}')->nullable();";
             }
         }
 
@@ -91,7 +88,7 @@ class MigrationGeneration
             if ($col['type'] == 'foreignId') {
                 $lines[] = "\$table->foreignId('{$col['name']}')->nullable()->constrained()->cascadeOnDelete();";
             } else {
-                $lines[] = "\$table->{$col['type']}('{$col['name']}');";
+                $lines[] = "\$table->{$col['type']}('{$col['name']}')->nullable();";
             }
         }
 
