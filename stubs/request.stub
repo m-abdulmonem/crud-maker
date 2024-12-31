@@ -6,6 +6,7 @@ use App\Http\Requests\Api\ApiMasterRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+{{POSTMAN}}
 class {{CRUD_NAME}}Request extends ApiMasterRequest
 {
     /**

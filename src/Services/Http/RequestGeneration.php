@@ -57,13 +57,16 @@ class RequestGeneration
                     '{{RULES}}',
                     '{{ATTRS}}',
                     '{{CRUD_LOWER_NAME}}',
+                    '{{POSTMAN}}'
+
                 ],
                 [
                     $namespace,
                     $name,
                     $finalRules,
                     $finalAttrs,
-                    $lowerName
+                    $lowerName,
+                    self::getPostmanKeys($columns,$translated)
                 ],
                 Helper::getStub('request')
                 //File::get(base_path('stubs/request.stub'))
@@ -78,6 +81,7 @@ class RequestGeneration
     {
         $rules = [];
         $attrs = [];
+        $postman = [];
         foreach ($columns as $column) {
             if ($column['type'] == 'uuid') {
                 continue;
@@ -97,10 +101,13 @@ class RequestGeneration
             }
 
             $attrs[] = "'{$column['name']}' => __('" . ucfirst(str_replace('_', ' ', $column['name'])) . "'),";
+            $postman[] = "//{$column['name']}:";
+
         }
         return [
             'rules' => $rules,
             'attrs' => $attrs,
+            'postman' => $postman
         ];
     }
 
@@ -117,13 +124,18 @@ class RequestGeneration
     {
         $rules = [];
         $attrs = [];
+        $postman = [];
         foreach ($translated ?? [] as $column) {
             $rules[] = "\$data[".'"'."\$locale.{$column['name']}".'"'."] = '\$status|" . self::$rules[$column['type']] . "';";
             $attrs[] = "\$data[".'"'."\$locale][{$column['name']}".'"'."] = __('" . ucfirst(str_replace('_', ' ', $column['name'])) . " in :local',locale: \$locale);";
+           foreach (config('translatable.locales') as $locale){
+               $postman[] = "//{$locale}[{$column['name']}]:";
+           }
         }
         return [
             'rules' => $rules,
             'attrs' => $attrs,
+            'postman' => $postman
         ];
     }
 
@@ -177,6 +189,16 @@ EOT;
             'finalRules' => $finalRules,
             'finalAttrs' => $finalAttrs,
         ];
+    }
+
+    private static function getPostmanKeys($command, array $columns, ?array $translated): string
+    {
+        $translations = self::getTranslationsColumns($translated);
+        $attrs = self::getColumns($columns);
+        return <<<EOT
+     {$command->indentCode($attrs['postman'])}
+     {$command->indentCode($translations['postman'])}
+EOT;
     }
 
 }
