@@ -69,7 +69,9 @@ EOT;
         if (!$command->hasOption('translated')) {
             return null;
         }
-        $attrs = [];
+        $attrs = [
+            "'id' => \$this->id,"
+        ];
         $translations = [];
 
         foreach ($columns as $column) {
