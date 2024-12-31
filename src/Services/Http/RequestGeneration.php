@@ -91,13 +91,13 @@ class RequestGeneration
                 self::getTableNameFromForeignId($column['name']) . ",id".'"'.",";
             }
             elseif ($column['is_media']) {
-                $rules[] = "'{$column['name']}' => ".'"'."\$status|" . self::$rules[$column['media_type']] . "".'"'.",";
+                $rules[] = "'{$column['name']}' => ".'"'."\$status|" . self::$rules[$column['media_type']] .'"'.",";
             }
             elseif ($column['is_list_media']) {
                 $rules[] = "'{$column['name']}.*' => ".'"'."\$status|" . self::$rules[$column['media_type']] .
                 "".'"'.",";
             } else {
-                $rules[] = "'{$column['name']}' => ".'"'."\$status|" . self::$rules[$column['type']] . "".'"'.",";
+                $rules[] = "'{$column['name']}' => ".'"'."\$status|" . self::$rules[$column['type']] .'"'.",";
             }
 
             $attrs[] = "'{$column['name']}' => __('" . ucfirst(str_replace('_', ' ', $column['name'])) . "'),";
