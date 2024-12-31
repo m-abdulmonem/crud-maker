@@ -118,8 +118,8 @@ class RequestGeneration
         $rules = [];
         $attrs = [];
         foreach ($translated ?? [] as $column) {
-            $rules[] = "'{$column['name']}' => '\$status|" . self::$rules[$column['type']] . "',";
-            $attrs[] = "'{$column['name']}' => __('" . ucfirst(str_replace('_', ' ', $column['name'])) . " in :local',locale: \$locale),";
+            $rules[] = "\$data[".'"'."\$locale.{$column['name']}".'"'."] = '\$status|" . self::$rules[$column['type']] . "';";
+            $attrs[] = "\$data[".'"'."\$locale][{$column['name']}".'"'."] = __('" . ucfirst(str_replace('_', ' ', $column['name'])) . " in :local',locale: \$locale);";
         }
         return [
             'rules' => $rules,

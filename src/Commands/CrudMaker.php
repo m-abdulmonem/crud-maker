@@ -28,7 +28,7 @@ class CrudMaker extends Command
                             {route? : The route file path for updating the route with this new crud routes}
                             {model? : The model the is exists before}
                             {path=Dashboard\Admin\ : The namespace path for the CRUD}
-                            {--t|translated? : Include a translations table}
+                            {--t|translated : Include a translations table}
                             ';
 
 
@@ -257,7 +257,7 @@ class CrudMaker extends Command
 
             if (strtolower($column) !== 'done' && $column) {
                 // Ask for column type if not predefined
-                if (!array_key_exists($column, $laravelTypes)) {
+                if (!array_key_exists($column, $laravelTypes) || str_contains($column,'_id')) {
                     $type = $this->choice(
                         "Select the type for column '$column'",
                         ['string', 'integer', 'boolean', 'text', 'longtext', 'date', 'timestamp', 'float', 'decimal', 'foreignId', 'uuid',

@@ -107,9 +107,10 @@ class ModelGenerations
             $class = self::getRelationName(str_replace('_id', '', $column['name']));
             $relations[] = <<<EOT
 
-            public function {$name}(){
-                \$this->belongsTo({$class}::class)
-            }
+        public function {$name}() :\Illuminate\Database\Eloquent\Relations\BelongsTo
+        {
+            return \$this->belongsTo({$class}::class);
+        }
 
     EOT;
         }
