@@ -90,10 +90,10 @@ class RequestGeneration
                 $rules[] = "'{$column['name']}' => ".'"'."\$status|exists:" .
                 self::getTableNameFromForeignId($column['name']) . ",id".'"'.",";
             }
-            elseif ($column['is_media']) {
+            elseif (@$column['is_media']) {
                 $rules[] = "'{$column['name']}' => ".'"'."\$status|" . self::$rules[$column['media_type']] .'"'.",";
             }
-            elseif ($column['is_list_media']) {
+            elseif (@$column['is_list_media']) {
                 $rules[] = "'{$column['name']}.*' => ".'"'."\$status|" . self::$rules[$column['media_type']] .
                 "".'"'.",";
             } else {

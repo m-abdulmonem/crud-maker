@@ -82,11 +82,11 @@ class ModelGenerations
     {
         $attrs = [];
         foreach ($columns as $col) {
-            if ($col['is_media'] || $col['is_list_media']) {
+            if (@$col['is_media'] || @$col['is_list_media']) {
                 $attrs[] = "'{$col['name']}' =>  \App\Casts\MediaColumn::class,";
             } elseif ($col['type'] == 'boolean') {
                 $attrs[] = "'{$col['name']}' => 'boolean',";
-            } elseif ($col['is_array']) {
+            } elseif (@$col['is_array']) {
                 $attrs[] = "'{$col['name']}' => 'array',";
             } elseif (@$col['is_enum']) {
                 $attrs[] = "'{$col['name']}' => \App\Enums\\" . EnumGeneration::getName($col['name']) . "Enum,";
