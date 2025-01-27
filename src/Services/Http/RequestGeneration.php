@@ -98,7 +98,7 @@ class RequestGeneration
                 $rules[] = "'{$column['name']}.*' => ".'"'."\$status|" . self::$rules[$column['media_type']] .
                 "".'"'.",";
             }elseif(@$column['type'] == 'enum'){
-                $rules[] = "'{$column['name']}' => ".'"'."\$status|in:".'" . '  .join(',', "\App\Enums\\$name".ucfirst($column['name'])."Enum::join()" ) .",";
+                $rules[] = "'{$column['name']}' => ".'"'."\$status|in:".'" . '  ."\App\Enums\\$name".Str::studly($column['name'])."Enum::join()" .",";
             }
             else {
                 $rules[] = "'{$column['name']}' => ".'"'."\$status|" . @self::$rules[$column['type']] .'"'.",";
