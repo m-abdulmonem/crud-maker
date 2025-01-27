@@ -48,7 +48,7 @@ class EnumGeneration
     {
         $convertedCases = [];
         foreach ($cases as $case) {
-            $convertedCases[] = "case " . ucfirst($case) . " = '$case';";
+            $convertedCases[] = "case " . ucfirst($case) . " = '$case'; //__('$case')";
         }
         return $command->indentCode($convertedCases, true);
     }

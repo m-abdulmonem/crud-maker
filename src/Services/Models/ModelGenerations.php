@@ -67,7 +67,7 @@ class ModelGenerations
                     $command->hasOption('translated') ? 'use Astrotomic\Translatable\Translatable;' : null,
                     self::getRelations($columns),
                     $translatedColumns ? "public array \$translatedAttributes = ['" . implode("','", array_column($translatedColumns, 'name')) . "'];" : null,
-                    self::getCastsAttrs($command, $columns)
+                    self::getCastsAttrs($command, $columns,$name)
                 ],
                 Helper::getStub('model')
 
@@ -78,7 +78,7 @@ class ModelGenerations
         $command->info("Model file created: $path,");
     }
 
-    private static function getCastsAttrs($command, $columns)
+    private static function getCastsAttrs($command, $columns,$name)
     {
         $attrs = [];
         foreach ($columns as $col) {
@@ -86,10 +86,14 @@ class ModelGenerations
                 $attrs[] = "'{$col['name']}' =>  \App\Casts\MediaColumn::class,";
             } elseif ($col['type'] == 'boolean') {
                 $attrs[] = "'{$col['name']}' => 'boolean',";
-            } elseif (@$col['is_array']) {
+            } elseif (in_array($col['type'],['time','timestamp'])) {
+                $attrs[] = "'{$col['name']}' => 'datetime',";
+            } elseif ($col['type'] == 'date') {
+                $attrs[] = "'{$col['name']}' => 'date',";
+            }elseif (@$col['is_array']) {
                 $attrs[] = "'{$col['name']}' => 'array',";
             } elseif (@$col['is_enum']) {
-                $attrs[] = "'{$col['name']}' => \App\Enums\\" . EnumGeneration::getName($col['name']) . "Enum,";
+                $attrs[] = "'{$col['name']}' => \App\Enums\\$name" . EnumGeneration::getName($col['name']) . "Enum::class,";
             }
         }
         return $command->indentCode($attrs, true);
