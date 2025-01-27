@@ -35,7 +35,7 @@ class CrudMakerServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->publishes( [
-            __DIR__ . '/../Stubs' => base_path('stubs/vendor/mabdulmonem/crud-maker'), // Destination path
+            __DIR__ . '/../maker_stubs' => base_path('stubs/vendor/mabdulmonem/crud-maker'), // Destination path
         ], 'stubs');
     }
 }

@@ -9,11 +9,11 @@ class Helper {
 
 
 
-    public static function getStub(string $name)
+    public static function getStub(string $name): string
     {
-        $path = file_exists(base_path("stubs/vendor/mabdulmonem/crud-maker/$name.stub"))
-        ? base_path("stubs/vendor/mabdulmonem/crud-maker/$name.stub")
-        : __DIR__ . "/../../stubs/$name.stub";
+        $path = file_exists(base_path("maker_stubs/vendor/mabdulmonem/crud-maker/$name.stub"))
+        ? base_path("maker_stubs/vendor/mabdulmonem/crud-maker/$name.stub")
+        : __DIR__ . "/../../maker_stubs/$name.stub";
 
         return File::get($path);
     }
