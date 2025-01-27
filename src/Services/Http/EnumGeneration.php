@@ -17,13 +17,13 @@ class EnumGeneration
         if (!File::isDirectory($path = base_path("app/Enums"))) {
             File::makeDirectory($path, 0755, true);
         }
-
-        if (File::isFile($path . "/{$crudName}{$columnName}Enum.php")) {
+        $name = Str::studly($columnName);
+        if (File::isFile($path . "/{$crudName}{$name}Enum.php")) {
             $command->warn("Enum file already exists at: {$path}");
         }
 
         File::put(
-            $path = $path . "/{$crudName}{$columnName}Enum.php",
+            $path = $path . "/{$crudName}{$name}Enum.php",
             str_replace(
                 [
                     '{{CRUD_NAME}}',

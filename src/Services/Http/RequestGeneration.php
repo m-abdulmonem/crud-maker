@@ -28,6 +28,7 @@ class RequestGeneration
         'videos' => 'array',
         'files' => 'array',
         'array' => 'array',
+        'enum' => 'enum'
     ];
 
     public static function build(Command $command, array $columns, ?array $translated, string $name, string $lowerName, string $namespace)
@@ -43,9 +44,9 @@ class RequestGeneration
         }
 
         if (!$command->hasOption('translated')) {
-            extract(self::rulesNotTranslations($command,$columns));
+            extract(self::rulesNotTranslations($command,$columns,$name));
         } else {
-            extract(self::rulesTranslations($command,$columns,$translated));
+            extract(self::rulesTranslations($command,$columns,$translated,$name));
         }
 
         File::put(
@@ -66,7 +67,7 @@ class RequestGeneration
                     $finalRules,
                     $finalAttrs,
                     $lowerName,
-                    self::getPostmanKeys($columns,$translated)
+                    self::getPostmanKeys($command,$columns,$translated,$name)
                 ],
                 Helper::getStub('request')
                 //File::get(base_path('stubs/request.stub'))
@@ -77,7 +78,7 @@ class RequestGeneration
 
     }
 
-    private static function getColumns($columns): array
+    private static function getColumns($columns,$name): array
     {
         $rules = [];
         $attrs = [];
@@ -88,7 +89,7 @@ class RequestGeneration
             }
             elseif ($column['type'] == 'foreignId') {
                 $rules[] = "'{$column['name']}' => ".'"'."\$status|exists:" .
-                self::getTableNameFromForeignId($column['name']) . ",id".'"'.",";
+                self::getTableNameFromForeignId($column['name'],$name) . ",id".'"'.",";
             }
             elseif (@$column['is_media']) {
                 $rules[] = "'{$column['name']}' => ".'"'."\$status|" . self::$rules[$column['media_type']] .'"'.",";
@@ -96,8 +97,11 @@ class RequestGeneration
             elseif (@$column['is_list_media']) {
                 $rules[] = "'{$column['name']}.*' => ".'"'."\$status|" . self::$rules[$column['media_type']] .
                 "".'"'.",";
-            } else {
-                $rules[] = "'{$column['name']}' => ".'"'."\$status|" . self::$rules[$column['type']] .'"'.",";
+            }elseif(@$column['type'] == 'enum'){
+                $rules[] = "'{$column['name']}' => ".'"'."\$status|in:".'" . '  .join(',', "\App\Enums\\$name".ucfirst($column['name'])."Enum::join()" ) .",";
+            }
+            else {
+                $rules[] = "'{$column['name']}' => ".'"'."\$status|" . @self::$rules[$column['type']] .'"'.",";
             }
 
             $attrs[] = "'{$column['name']}' => __('" . ucfirst(str_replace('_', ' ', $column['name'])) . "'),";
@@ -111,7 +115,7 @@ class RequestGeneration
         ];
     }
 
-    private static function getTableNameFromForeignId(string $columnName): string
+    private static function getTableNameFromForeignId(string $columnName,$name): string
     {
         // Remove the `_id` suffix from the column name
         $baseName = str_replace('_id', '', $columnName);
@@ -139,9 +143,9 @@ class RequestGeneration
         ];
     }
 
-    private  static function rulesNotTranslations($command, $columns): array
+    private  static function rulesNotTranslations($command, $columns,$name): array
     {
-        $attrs = self::getColumns($columns);
+        $attrs = self::getColumns($columns,$name);
         $finalRules = <<<EOT
     return [
             {$command->indentCode($attrs['rules'])}
@@ -160,10 +164,10 @@ EOT;
         ];
     }
 
-    private static function rulesTranslations($command, $columns, $translated)
+    private static function rulesTranslations($command, $columns, $translated,$name)
     {
         $translations = self::getTranslationsColumns($translated);
-        $attrs = self::getColumns($columns);
+        $attrs = self::getColumns($columns,$name);
         $finalRules = <<<EOT
         \$data  = [
             {$command->indentCode($attrs['rules'])}
@@ -191,10 +195,10 @@ EOT;
         ];
     }
 
-    private static function getPostmanKeys($command, array $columns, ?array $translated): string
+    private static function getPostmanKeys($command, array $columns, ?array $translated,$name): string
     {
         $translations = self::getTranslationsColumns($translated);
-        $attrs = self::getColumns($columns);
+        $attrs = self::getColumns($columns,$name);
         return <<<EOT
      {$command->indentCode($attrs['postman'])}
      {$command->indentCode($translations['postman'])}

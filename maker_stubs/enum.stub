@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Enums;
-
+use App\Traits\EnumTo;
 enum {{CRUD_NAME}}Enum: {{ENUM_TYPE}}
 {
-    case Admin = 'admin';
-
+    use EnumTo;
     {{CASES}}
 
 }
