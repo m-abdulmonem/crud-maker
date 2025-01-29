@@ -40,7 +40,8 @@ class {{PLURALIZED_CRUD_NAME}}Controller extends Controller implements HasMiddle
         $data = $this->service->list(
             $request,
             search: $this->search,
-            closure: function ($q){
+            closure: function ($q) use($request){
+                {{FILTERS}}
                 //todo : add more statements to sql
             }
         );

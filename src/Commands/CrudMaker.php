@@ -261,11 +261,14 @@ class CrudMaker extends Command
                     $type = $this->choice(
                         "Select the type for column '$column'",
                         ['string', 'integer', 'boolean', 'text', 'longtext', 'date', 'timestamp', 'float', 'decimal', 'foreignId', 'uuid',
-                            'image', 'video', 'file', 'images', 'videos', 'files', 'array', 'enum'],
+                            'image', 'video', 'file', 'images', 'videos', 'files', 'array', 'enum','pivot'],
                         0
                     );
 
                     // If the type is 'enum', ask for values
+                    if ($type === 'pivot'){
+                        //this will contain pivot table columns
+                    }
                     if ($type === 'enum') {
                         $enumValues = [];
                         do {

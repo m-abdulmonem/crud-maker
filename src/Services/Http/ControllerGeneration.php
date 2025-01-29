@@ -34,6 +34,7 @@ class ControllerGeneration
                     '{{CRUD_NAME}}',
                     '{{LOWER_CRUD_NAME}}',
                     '{{CRUD_COLUMNS}}',
+                    '{{FILTERS}}'
 
                 ],
                 [
@@ -41,7 +42,8 @@ class ControllerGeneration
                     $pluralized,
                     $name,
                     $lowerName,
-                    self::getSearchColumns($command,$columns)
+                    self::getSearchColumns($command,$columns),
+                    self::filters($command,$columns)
                 ],
                 Helper::getStub('controller')
                 //File::get($stubPath)
@@ -67,6 +69,11 @@ class ControllerGeneration
 
         }
         return $command->indentCode($searchColumns, true);
+    }
+
+    private static function filters(Command $command, array $columns): null
+    {
+        return null;
     }
 
 
