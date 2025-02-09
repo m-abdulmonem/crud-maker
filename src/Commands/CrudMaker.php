@@ -10,6 +10,7 @@ use Mabdulmonem\CrudMaker\Services\Http\EnumGeneration;
 use Mabdulmonem\CrudMaker\Services\Http\RequestGeneration;
 use Mabdulmonem\CrudMaker\Services\Http\ResourceGeneration;
 use Mabdulmonem\CrudMaker\Services\Http\RoutesGeneration;
+use Mabdulmonem\CrudMaker\Services\Managers\ColumnManager;
 use Mabdulmonem\CrudMaker\Services\Models\MigrationGeneration;
 use Mabdulmonem\CrudMaker\Services\Models\ModelGenerations;
 use Illuminate\Support\Facades\Schema;
@@ -125,11 +126,13 @@ class CrudMaker extends Command
             }
 
         } else {
-            $columns = $this->getColumns();
+            $columnManager = new ColumnManager($this);
+            $columns = $columnManager->getColumns();
+//            $columns = $this->getColumns();
 
             if ($this->hasOption('translated')) {
                 // $this->info('Please enter translations table column');
-                $translatedColumns = $this->getColumns("Enter the name of the translations table column (or type 'done' to finish)");
+                $translatedColumns = $columnManager->getColumns("Enter the name of the translations table column (or type 'done' to finish)");
             }
         }
 
@@ -224,6 +227,11 @@ class CrudMaker extends Command
         ];
     }
 
+    /**
+     * @param $message
+     * @return array
+     * @deprecated
+     */
     public function getColumns($message = "Enter the name of the database column (or type 'done' to finish)"): array
     {
         $columns = [];
