@@ -26,9 +26,9 @@ class CrudMaker extends Command
     protected $signature = 'make:crud
                             {name}
                             {route? : The route file path for updating the route with this new crud routes}
-                            {model? : The model the is exists before}
                             {path=Dashboard\Admin\ : The namespace path for the CRUD}
                             {--t|translated : Include a translations table}
+                            {model? : The model the is exists before}
                             ';
 
 
