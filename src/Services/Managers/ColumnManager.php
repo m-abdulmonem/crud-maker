@@ -13,6 +13,9 @@ class ColumnManager
 
     }
 
+    /**
+     * @throws \Exception
+     */
     public function __call($method, $parameters)
     {
         if (! method_exists($this, $method)) {
