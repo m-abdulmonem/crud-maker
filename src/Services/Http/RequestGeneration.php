@@ -130,8 +130,8 @@ class RequestGeneration
         $attrs = [];
         $postman = [];
         foreach ($translated ?? [] as $column) {
-            $rules[] = "\$data[".'"'."\$locale.{$column['name']}".'"'."] = '\$status|" . self::$rules[$column['type']] . "';";
-            $attrs[] = "\$data[".'"'."\$locale][{$column['name']}".'"'."] = __('" . ucfirst(str_replace('_', ' ', $column['name'])) . " in :local',locale: \$locale);";
+            $rules[] = "\$data[".'"'."\$locale.{$column['name']}".'"'."] = ".'"'."\$status|" . self::$rules[$column['type']] . '"'.";";
+            $attrs[] = "\$data[".'"'."\$locale.{$column['name']}".'"'."] = __('" . ucfirst(str_replace('_', ' ', $column['name'])) . " in :local',locale: \$locale);";
            foreach (config('translatable.locales') as $locale){
                $postman[] = "//{$locale}[{$column['name']}]:";
            }

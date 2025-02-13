@@ -78,19 +78,19 @@ EOT;
             if ($column['type'] == 'boolean') {
                 $attrs[] = "'{$column['name']}' => (boolean)\$this->{$column['name']},";
             }
-            if ($column['type'] == 'timestamp') {
+            elseif ($column['type'] == 'timestamp') {
                 $attrs[] = "'{$column['name']}' => \$this->{$column['name']}?->format('Y-m-d H:i'),";
             }
-            if ($column['type'] == 'date') {
+            elseif ($column['type'] == 'date') {
                 $attrs[] = "'{$column['name']}' => \$this->{$column['name']}?->format('Y-m-d'),";
             }
-            if ($column['type'] == 'time') {
+            elseif ($column['type'] == 'time') {
                 $attrs[] = "'{$column['name']}' => \$this->{$column['name']}?->format('H:i'),";
             }
-            if ($column['type'] == 'integer') {
+            elseif ($column['type'] == 'integer') {
                 $attrs[] = "'{$column['name']}' => (int)\$this->{$column['name']},";
             }
-            if ($column['type'] == 'foreignId') {
+            elseif ($column['type'] == 'foreignId') {
                 $name = str_replace('_id', '', $column['name']);
                 $resource = $command->convertToPascalCase($name);
                 $attrs[] = "'$name' => \$this->{$name} ? Simple{$resource}Resource::make(\$this->{$name}) : null,";

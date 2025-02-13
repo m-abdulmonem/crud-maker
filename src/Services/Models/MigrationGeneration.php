@@ -94,7 +94,7 @@ class MigrationGeneration
 
         $translatedTable = <<<EOT
 
-        Schema::create('{$name}_translations', function (Blueprint \$table) {
+        Schema::create('{$lowerName}_translations', function (Blueprint \$table) {
             \$table->id();
             {$command->indentCode($lines)}
             \$table->string('locale')->nullable();
